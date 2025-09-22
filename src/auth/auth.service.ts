@@ -11,8 +11,6 @@ import { PrismaService } from 'src/prisma.service'
 import { UserService } from 'src/user/user.service'
 import { AuthDto } from './dto/auth.dto'
 
-
-
 @Injectable()
 export class AuthService {
 	EXPIRE_DAY_REFRESH_TOKEN = 1
@@ -27,9 +25,9 @@ export class AuthService {
 
 	async login(dto: AuthDto) {
 		const user = await this.validateUser(dto)
+
 		//@ts-ignore
 		const tokens = this.issueTokens(user.id)
-
 		return { user, ...tokens }
 	}
 
@@ -40,7 +38,7 @@ export class AuthService {
 			throw new BadRequestException('Пользователь уже существует')
 
 		const user = await this.userService.create(dto)
-
+//@ts-ignore
 		const tokens = this.issueTokens(user.id)
 
 		return { user, ...tokens }
@@ -51,7 +49,7 @@ export class AuthService {
 		if (!result) throw new UnauthorizedException('Невалидный refresh токен')
 
 		const user = await this.userService.getById(result.id)
-
+//@ts-ignore
 		const tokens = this.issueTokens(user.id)
 
 		return { user, ...tokens }
@@ -96,7 +94,7 @@ export class AuthService {
 				}
 			})
 		}
-		//@ts-ignore
+//@ts-ignore
 		const tokens = this.issueTokens(user.id)
 
 		return { user, ...tokens }
@@ -115,7 +113,7 @@ export class AuthService {
 		})
 	}
 
-	removeRefreshTokenToResponse(res: Response) {
+	removeRefreshTokenFromResponse(res: Response) {
 		res.cookie(this.REFRESH_TOKEN_NAME, '', {
 			httpOnly: true,
 			domain: this.configService.get('SERVER_DOMAIN'),

@@ -10,7 +10,9 @@ export class UserService {
     }
 
 	async getById(id: string) {
-		return this.prisma.user.findUnique({
+		//@ts-ignore
+		const user = await this.prisma.user.findUnique({
+
 			where: {
 				id
 			},
@@ -24,6 +26,8 @@ export class UserService {
 				orders: true
 			}
 		})
+
+		return user
 	}
     async getByEmail(email: string) {
         const user = await this.prisma.user.findUnique({
@@ -31,6 +35,7 @@ export class UserService {
                 email
             },
             select: {
+				id: true,
                 stores: true,
                 favorites: true,
                 orders: true
